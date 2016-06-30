@@ -1,8 +1,16 @@
 .makelist <- function(list, type = "Filter") {
-    tmp <- as.list(c(names(list), list))
-    names(tmp) <- c(paste0(type,".",1:length(list),".Key"),
-                    paste0(type,".",1:length(list),".Value"))
-    return(tmp)
+  
+  kv_label <- (
+    if (type == "Filter") "Name"
+    else if (type == "Tag") "Key"
+    else stop("Invalid type")
+  )
+  
+  tmp <- as.list(c(names(list), list))
+  names(tmp) <- c(paste0(type,".",1:length(list), ".", kv_label),
+                  paste0(type,".",1:length(list),".Value"))
+  
+  tmp
 }
 
 flatten_list <- function(x) {
@@ -111,4 +119,22 @@ get_networkaclid <- function(x) {
     } else {
         return(x)
     }
+}
+
+get_snapshotid <- function(x) {
+  if (inherits(x, "ec2_snapshot")) {
+    return(x$snapshotId[[1]])
+  } else if (is.character(x)) {
+    return(x)
+  }
+  else stop("Not a valid snapshot object")
+}
+
+get_volumeid <- function(x) {
+  if (inherits(x, "ec2_volume")) {
+    return(x$volumeId[[1]])
+  } else if (is.character(x)) {
+    return(x)
+  }
+  else stop("Not a valid volume object")
 }
