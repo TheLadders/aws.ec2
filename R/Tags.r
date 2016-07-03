@@ -30,10 +30,10 @@ create_tags <- function(resource, tag, ...) {
     query <- c(query, resource)
     query <- c(query, .makelist(tag, type = "Tag"))
     r <- ec2HTTP(query = query, ...)
-    if (r$return[[1]] == "true") {
-        return(TRUE)
+    if (r[[2]] == "true") {
+        TRUE
     } else { 
-        return(FALSE)
+        FALSE
     }
 }
 

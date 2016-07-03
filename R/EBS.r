@@ -2,7 +2,7 @@
 #' @description Create a new EBS-backed volume
 #' @param availability_zone the zone in which to create the volume
 #' @param volume_type the type of volume (ie gp2, io1)
-#' @param size the size of the new volume in GB (specify an int)
+#' @param size optionally, the size of the new volume in GB (when missing, defaults to size of snapshot)
 #' @param snapshot optionally, a snapshot-id from which the volume will be instantiated
 #' @param encrypted whether or not to encrypt the volume
 #' @param iops the number of iops to be provisioned to the volume
@@ -12,11 +12,11 @@ create_volume <- function(availability_zone, volume_type, size,
                           snapshot, encrypted, iops, ...) {
   query <- list(Action = "CreateVolume",
                 AvailabilityZone = availability_zone,
-                VolumeType = volume_type,
-                Size = size)
+                VolumeType = volume_type)
   if (!missing(snapshot)) query$SnapshotId <- snapshot
   if (!missing(iops)) query$Iops <- iops
   if (!missing(encrypted)) query$Encrypted <- encrypted
+  if (!missing(size)) query$Size <- size
   r <- ec2HTTP(query = query, ...)
   structure(flatten_list(r), class = "ec2_volume")
 }
