@@ -12,7 +12,7 @@ create_volume(availability_zone, volume_type, size, snapshot, encrypted, iops,
 
 \item{volume_type}{the type of volume (ie gp2, io1)}
 
-\item{size}{the size of the new volume in GB (specify an int)}
+\item{size}{optionally, the size of the new volume in GB (when missing, defaults to size of snapshot)}
 
 \item{snapshot}{optionally, a snapshot-id from which the volume will be instantiated}
 

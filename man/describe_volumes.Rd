@@ -16,7 +16,7 @@ describe_volumes(filter, n, page, ...)
 \item{...}{Additional arguments passed to \code{\link{ec2HTTP}}.}
 }
 \value{
-A list of lists, each list containing API returned data on matching snapshots#' @export
+A list of lists, each list containing API returned data on matching snapshots
 }
 \description{
 Search/Describe volumes

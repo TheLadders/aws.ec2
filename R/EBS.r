@@ -7,7 +7,6 @@
 #' @param encrypted whether or not to encrypt the volume
 #' @param iops the number of iops to be provisioned to the volume
 #' @return A list containing the results of the API call
-#' @export
 create_volume <- function(availability_zone, volume_type, size,
                           snapshot, encrypted, iops, ...) {
   query <- list(Action = "CreateVolume",
@@ -23,18 +22,36 @@ create_volume <- function(availability_zone, volume_type, size,
 
 delete_volume <- function() {}
 
-attach_volume <- function() {
-  # query <- list(Action = "CreateSnapshot",
-  #               VolumeId = get_volumeid(volume))
-  # if (!missing(description)) {
-  #   query$Description = description
-  # }
-  # r <- ec2HTTP(query = query, ...)
-  # 
-  # structure(flatten_list(r), class = "ec2_snapshot")
+#' @title Attach volume
+#' @description Attach a volume to an instance on the given device
+#' @return A list containing the results of the API call
+#' @export
+attach_volume <- function(device, instance, volume, ...) {
+  query <- list(Action = "AttachVolume",
+                VolumeId = get_volumeid(volume),
+                Device = device,
+                InstanceId = get_instanceid(instance))
+  
+  r <- ec2HTTP(query = query, ...)
+  
+  structure(flatten_list(r), class = "ec2_volume")
 }
 
-detach_volume <- function() {}
+#' @title Detach volume
+#' @description Detach a volume to an instance on the given device
+#' @return A list containing the results of the API call
+#' @export
+detach_volume <- function(device, instance, volume,
+                          force, ...) {
+  query <- list(Action = "DetachVolume",
+                VolumeId = get_volumeid(volume),
+                Device = device,
+                InstanceId = get_instanceid(instance))
+  if (!missing(force))  query$Force <- force
+  r <- ec2HTTP(query = query, ...)
+  
+  structure(flatten_list(r), class = "ec2_volume")   
+}
 
 enable_volume_io <- function() {}
 
