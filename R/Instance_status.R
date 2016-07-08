@@ -49,13 +49,11 @@ describe_instances <- function(instance, filter, n, token, ...) {
         query$NextToken <- token
     }
     r <- ec2HTTP(query = query, ...)
-    out <- unname(lapply(r$reservationSet, function(x) {
-        x$instancesSet <- unname(lapply(x$instancesSet, function(x) {
-            structure(flatten_list(x), class = "ec2_instance")
-        }))
-        `class<-`(x, "ec2_reservation")
-    }))
-    return(out)
+    out <- lapply(r[[2]], function(x) {
+      structure(flatten_list(x$instancesSet), class = "ec2_instance")
+          })
+    
+    out
 }
 
 #' @rdname describe_instances

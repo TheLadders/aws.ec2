@@ -7,6 +7,7 @@
 #' @param encrypted whether or not to encrypt the volume
 #' @param iops the number of iops to be provisioned to the volume
 #' @return A list containing the results of the API call
+#' @export
 create_volume <- function(availability_zone, volume_type, size,
                           snapshot, encrypted, iops, ...) {
   query <- list(Action = "CreateVolume",
@@ -20,7 +21,19 @@ create_volume <- function(availability_zone, volume_type, size,
   structure(flatten_list(r), class = "ec2_volume")
 }
 
-delete_volume <- function() {}
+#' @title Delete volume
+#' @description Delete a given volume
+#' @param volume the volume-id to be deleted
+#' @return A list containing the results of the API call
+#' @export
+delete_volume <- function(volume, ...) {
+    query <- list(Action = "DeleteVolume",
+                  VolumeId = get_volumeid(volume))
+    r <- ec2HTTP(query = query, ...)
+    
+    structure(flatten_list(r), class = "ec2_volume")
+}
+  
 
 #' @title Attach volume
 #' @description Attach a volume to an instance on the given device
@@ -84,7 +97,7 @@ describe_volumes <- function(filter, n, page, ...) {
     query$NextToken <- page
   }
   r <- ec2HTTP(query = query, ...)
-  structure(flatten_list(r[[2]]), class = "ec2_volume")
+  structure(r[[2]], class = "ec2_volume")
 }
 
 # NOT COMPLETE
@@ -131,6 +144,7 @@ delete_snapshot <- function(snapshot, ...) {
   
   structure(flatten_list(r), class = "ec2_snapshot")
 }
+
 get_snapshot_attr <- function() {}
 
 set_snapshot_attr <- function() {}
